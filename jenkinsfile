@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-  def appName = 'my-app'
-  def feSvcName = "${appName}-frontend"
-  def imageTag = "rgaddamanugu/${appName}:1.16"
+//  def appName = 'my-app'
+//  def feSvcName = "${appName}-frontend"
+ // def imageTag = "rgaddamanugu/${appName}:1.16"
 
   stages {
      stage('Git checkout') {
@@ -16,22 +16,23 @@ pipeline {
 
      stage ('Build image') {
             steps {
-               sh("docker build -t ${imageTag} .")
+               sh("docker build -t my-app .")
+               sh("docker tag my-app rgaddamanugu/my-app:0.1.18")
            }
         }
 
      stage ('Push image to registry') {
             steps {
-               sh("docker -- push ${imageTag}")
+               sh("docker push rgaddamanugu/my-app:0.1.18")
            }
         }
 
      stage ('Kuberenetes Deployment Application') {
             steps { 
-              sh("sed -i.bak 's#rgaddamanugu/GNA/gnaui:1.0.0#${imageTag}#' ./k8s/stage/*.yaml")
+              sh("sed -i.bak 's#rgaddamanugu/myapp:1.1.18' ./k8s/dev/*.yaml")
               sh("kubectl --namespace=default apply -f k8s/services/")
-              sh("kubectl --namespace=default apply -f k8s/stage/")
-              sh("echo http://`kubectl --namespace=default get service/${feSvcName}`")
+              sh("kubectl --namespace=default apply -f k8s/dev/")
+              sh("echo http://`kubectl --namespace=default get all`")
           }
         }
   } 
