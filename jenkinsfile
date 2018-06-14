@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+  def appName = 'my-app'
+  def feSvcName = "${appName}-frontend"
+  def imageTag = "rgaddamanugu/${appName}:1.16"
+
+  stages {
+     stage('Git checkout') {
+            steps {
+                echo 'Fetching code from Git...'
+                git url: 'https://github.com/rgaddama/jenkinsfile', branch: 'jenkins'
+                checkout scm
+            }
+        }
+
+     stage ('Build image') {
+            steps {
+               sh("docker build -t ${imageTag} .")
+           }
+        }
+
+     stage ('Push image to registry') {
+            steps {
+               sh("docker -- push ${imageTag}")
+           }
+        }
+
+     stage ('Kuberenetes Deployment Application') {
+            steps { 
+              sh("sed -i.bak 's#rgaddamanugu/GNA/gnaui:1.0.0#${imageTag}#' ./k8s/stage/*.yaml")
+              sh("kubectl --namespace=default apply -f k8s/services/")
+              sh("kubectl --namespace=default apply -f k8s/stage/")
+              sh("echo http://`kubectl --namespace=default get service/${feSvcName}`")
+          }
+        }
+  } 
+}    
