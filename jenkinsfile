@@ -9,7 +9,7 @@ pipeline {
      stage('Git checkout') {
             steps {
                 echo 'Fetching code from Git...'
-                git url: 'https://github.com/rgaddama/jenkinsfile', branch: 'jenkins'
+                git url: 'https://github.com/rgaddama/myapp.git'
                 checkout scm
             }
         }
