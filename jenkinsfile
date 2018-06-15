@@ -22,19 +22,19 @@ pipeline {
 
      stage ('Tag image') {
             steps {
-               sh("docker tag my-app rgaddamanugu/my-app:0.1.20")
+               sh("docker tag my-app rgaddamanugu/my-app:0.1.21")
            }
         }
 
      stage ('Push image to registry') {
             steps {
-               sh("docker push rgaddamanugu/my-app:0.1.20")
+               sh("docker push rgaddamanugu/my-app:0.1.21")
            }
         }
 
      stage ('Kuberenetes Services up') {
             steps { 
-              sh("sed -i.bak 's#rgaddamanugu/my-app:0.1.19#rgaddamanugu/my-app:0.1.20#' ./k8s/dev/*.yaml")
+              sh("sed -i.bak 's#rgaddamanugu/my-app:0.1.0#rgaddamanugu/my-app:0.1.21#' ./k8s/dev/*.yaml")
               sh("kubectl --namespace=default apply -f k8s/services/")
               sh("kubectl --namespace=default apply -f k8s/dev/")
               sh("echo http://`kubectl --namespace=default get service/my-app-frontend`")
