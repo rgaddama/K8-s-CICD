@@ -17,6 +17,11 @@ pipeline {
      stage ('Build image') {
             steps {
                sh("docker build -t my-app .")
+           }
+        }
+
+     stage ('Tag image') {
+            steps {
                sh("docker tag my-app rgaddamanugu/my-app:0.1.20")
            }
         }
