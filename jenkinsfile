@@ -27,9 +27,9 @@ pipeline {
            }
         }
 
-     stage ('Kuberenetes Deployment Application') {
+     stage ('Kuberenetes Services up') {
             steps { 
-              sh("sed -i.bak 's#rgaddamanugu/myapp:1.1.18' ./k8s/dev/*.yaml")
+              sh("sed -i.bak 's#rgaddamanugu/my-app:0.1.0#rgaddamanugu/my-app:0.1.18#' ./k8s/dev/*.yaml")
               sh("kubectl --namespace=default apply -f k8s/services/")
               sh("kubectl --namespace=default apply -f k8s/dev/")
               sh("echo http://`kubectl --namespace=default get all`")

@@ -1,0 +1,24 @@
+# APP DEPLOYMENT
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: my-app
+  name: my-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: my-app-exposed
+  template:
+    metadata:
+      labels:
+        run: my-app-exposed
+    spec:
+      containers:
+      - image: rgaddamanugu/my-app:0.1.0
+        name: my-app
+        ports:
+        - containerPort: 80
+          protocol: TCP
