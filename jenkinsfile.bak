@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+//  def appName = 'my-app'
+//  def feSvcName = "${appName}-frontend"
+ // def imageTag = "rgaddamanugu/${appName}:1.16"
+
   stages {
      stage('Git checkout') {
             steps {
@@ -12,32 +16,32 @@ pipeline {
 
      stage ('Build image') {
             steps {
-              script {
-                 def project_name = 'project_name'
+              script {        
                  def tag_version = 'tag_version'
                }
-                 sh("docker build -t ${project_name}_${BUILD_NUMBER} .")
+                 sh("docker build -t my-app .")
            }
         }
+
      stage ('Tag image') {
            steps {
-               sh("docker tag ${project_name} artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}")
+               sh("docker tag my-app artifactory.teslamotors.com:2038/my-app:${tag_version}")
            }
         }
 
      stage ('Push image to registry') {
             steps {
-               sh("docker push artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}")
+               sh("docker push artifactory.teslamotors.com:2038/my-app:${tag_version}")
            }
         }
 
      stage ('Kuberenetes Services up') {
-            steps {
-              sh("sed -i.bak 's#artifactory.teslamotors.com:2038/my-app:0.1.0#artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}#' ./k8s/dev/*.yaml")
+            steps { 
+              sh("sed -i.bak 's#artifactory.teslamotors.com:2038/my-app:0.1.0#artifactory.teslamotors.com:2038/my-app:${tag_version}#' ./k8s/dev/*.yaml")
               sh("kubectl --namespace=default apply -f k8s/services/")
               sh("kubectl --namespace=default apply -f k8s/dev/")
               sh("echo http://`kubectl --namespace=default get all`")
           }
         }
-  }
-}
+  } 
+}    
