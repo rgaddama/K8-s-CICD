@@ -25,13 +25,13 @@ pipeline {
 
      stage ('Tag image') {
            steps {
-               sh("docker tag my-app rgaddamanugu/my-app:${tag_version}")
+               sh("docker tag my-app artifactory.teslamotors.com:2038/my-app:${tag_version}")
            }
         }
 
      stage ('Push image to registry') {
             steps {
-               sh("docker push rgaddamanugu/my-app:${tag_version}")
+               sh("docker push artifactory.teslamotors.com:2038/my-app:${tag_version}")
            }
         }
 
