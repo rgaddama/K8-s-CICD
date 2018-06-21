@@ -17,7 +17,7 @@ spec:
         run: my-app-exposed
     spec:
       containers:
-      - image: artifactory.teslamotors.com:2038/0.1.0
+      - image: artifactory.teslamotors.com:2038/my-app:0.1.0
         name: my-app
         ports:
         - containerPort: 80
