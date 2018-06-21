@@ -16,7 +16,7 @@ pipeline {
                  def project_name = 'project_name'
                  def tag_version = 'tag_version'
                }
-                 sh("docker build -t ${project_name}_${BUILD_NUMBER} .")
+                 sh("docker build -t ${project_name} .")
            }
         }
      stage ('Tag image') {
