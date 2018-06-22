@@ -28,19 +28,19 @@ pipeline {
         }
      stage ('Tag image') {
            steps {
-               sh("docker tag ${project_name} artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}")
+               sh("docker tag ${project_name} artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${branch_name}_${BUILD_NUMBER}")
            }
         }
 
      stage ('Push image to registry') {
             steps {
-               sh("docker push artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}")
+               sh("docker push artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${branch_name}_${BUILD_NUMBER}")
            }
         }
 
      stage ('Kuberenetes Services up') {
             steps {
-              sh("sed -i.bak 's#artifactory.teslamotors.com:2038/my-app:0.1.0#artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${BUILD_NUMBER}#' ./k8s/dev/*.yaml")
+              sh("sed -i.bak 's#artifactory.teslamotors.com:2038/my-app:0.1.0#artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${branch_name}_${BUILD_NUMBER}#' ./k8s/dev/*.yaml")
               sh("kubectl --namespace=default apply -f k8s/services/")
               sh("kubectl --namespace=default apply -f k8s/dev/")
               sh("echo http://`kubectl --namespace=default get all`")
