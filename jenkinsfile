@@ -4,6 +4,13 @@ pipeline {
   stages {
      stage('Git checkout') {
             steps {
+               script {
+                  def branch_name = 'master'
+
+                 if (getBinding().hasVariable("branch_name")) {
+                   branch_name = 'branch_name'
+            }
+       }    
                 echo 'Fetching code from Git...'
                 git url: 'https://github.com/rgaddama/myapp.git'
                 checkout scm
