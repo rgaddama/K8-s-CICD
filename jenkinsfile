@@ -32,7 +32,7 @@ pipeline {
            }
         }
 
-     stage ('Push image to registry') {
+     stage ('Push image to Artifact Repository') {
             steps {
                sh("docker push artifactory.teslamotors.com:2038/${project_name}:${tag_version}_${branch_name}_${BUILD_NUMBER}")
            }
